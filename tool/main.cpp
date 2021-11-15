@@ -646,6 +646,7 @@ void mzcrocko2districts(const string& horizon)
             }
         }
     }
+
     cout << inconsistento << " inconsistent records: "
          << ocounter.wrong << " wrong dates,"
          << ocounter.over << " dates over,"
@@ -821,6 +822,429 @@ void mzcrocko2districts(const string& horizon)
     }
 }
 
+
+
+enum evaccine { Comirnaty, SPIKEVAX, VAXZEVRIA, Janssen, numvaccines };
+
+evaccine vac2vac(const string& vstr )
+{
+    static vector<string> vaccnames = {"Comirnaty", "SPIKEVAX", "VAXZEVRIA", "COVID-19 Vaccine Janssen"};
+
+    unsigned i = 0;
+    for(;i<numvaccines; i++)
+        if(vstr == vaccnames[i])
+            break;
+    return static_cast<evaccine>(i);
+}
+
+void ockodata2districts() // rozdelane
+{
+    string lastdatestr = "2021-11-05";
+//    string firstextrastr = "2021-09-20";
+    string firstvaccdatestr = "2021-12-27";
+
+//    unsigned firstextra = date2int(firstextrastr);
+    unsigned firstvaccdate = date2int(firstvaccdatestr);
+
+//    unsigned firstextrarel = firstextra - zerodate ;
+    unsigned firstvaccdaterel = firstvaccdate - zerodate;
+
+    enum egender { emale, efemale, enumgenders };
+    enum evk  { v1215, v1617, v1824, v2529, v3034, v3539, v4044,v4549, v5055,v5559, v6054,v6559, v7074,v7579, v80plus, vunknown, numvks };
+
+
+    int lastdate = date2int(lastdatestr);
+    int numdates = lastdate - zerodate + 1;
+
+    int numweeks = (numdates + 6) / 7;
+
+    unsigned inconsistento = 0;
+
+    struct survivalrecord
+    {
+        bool extra = false;
+        vector<unsigned> delta;
+        vector<unsigned> events;
+    };
+
+    unsigned noagerecords = 0;
+//    unsigned earlyextras = 0;
+
+    vector<vector<vector<vector<survivalrecord>>>> Y(numdates,
+        vector<vector<vector<survivalrecord>>>(numvaccines,
+        vector<vector<survivalrecord>>(enumgenders,
+            vector<survivalrecord>(numvks))));
+
+    for(unsigned i=firstvaccdaterel; i<=lastdate; i++)
+        for(unsigned j=0; j<numvaccines; j++)
+            for(unsigned k=0; k<enumgenders; k++)
+                for(unsigned l=0; l<numvks; l++)
+                {
+                    Y[i][j][k][l].delta.resize(numdates-i,0);
+                    Y[i][j][k][l].events.resize(numdates-i,0);
+                }
+
+//    auto H = Y;
+//    auto J = Y;
+//    auto D = Y;
+
+    csv<','> data("/home/martin/Documents/s/covid/data/epidemie/xaa.csv");//data.csv");
+
+    cout << "Importing ockodata" << endl;
+
+    counter vcounter;
+    counter icounter;
+    counter ecounter;
+
+    for(unsigned i=1; i<data.r(); i++)
+    {
+        enum {pohlavi,vek,GEO_KrajKod,GEO_ORPKod,DatumPrvnihoPriznakuOKmin,
+              DatumOdberuOKmin,DatumVysledkuOKmin,DatumHlaseniOKmin,KHS_IsolaceDatum,
+              VYL_datum_vyleceni_final,ZEM_datum_umrti_fin,ZEM_umrti_bin,
+              prvnidavka,druhadavka,ukoncene_ockovani,extra_davka,
+              OckovaciLatka,OckovaciLatka1,OckovaciLatka2,OckovaciLatka3,
+              nakaza_po_dokonc,vek_H,vek_kat,pohlavi_H,kraj_bydliste,kraj_prvni_nemocnice,datum_positivity,zahajeni_hosp,posledni_zaznam,datum_priznaku,datum_odberu,stav_dle_khs,stav_posledni_zaznam,posledni_hosp_zaznam,nejtezsi_stav,tezky_stav,tezky_stav_pocatek,dni_tezky_stav,tezky_stav_posledni,jip,jip_pocatek,dni_jip,jip_posledni,kyslik,kyslik_pocatek,dni_kyslik,kyslik_posledni,upv,upv_pocatek,dni_upv,upv_posledni,ecmo,ecmo_pocatek,dni_ecmo,ecmo_posledni,umrti,datum_umrti,HFNO,HFNO_pocatek,dni_HFNO,HFNO_posledni,DatumHlaseni1,DatumHlaseni2,DatumHlaseni3,DatumPrvnihoPriznaku1,DatumPrvnihoPriznaku2,DatumPrvnihoPriznaku3,DatumOdberu1,DatumOdberu2,DatumOdberu3,DatumVysledku1,DatumVysledku2,DatumVysledku3};
+
+        string vstr = data(i,OckovaciLatka2);
+        if(vstr == "")
+            continue;
+        evaccine v = vac2vac(vstr);
+        if(v==numvaccines)
+            throw "unknown vaccine " + vstr;
+
+        evk vk;
+        string vs = data(i,vek);
+        if(vs=="")
+        {
+            noagerecords++;
+            vk = vunknown;
+        }
+        else
+        {
+            try
+            {
+                unsigned age = stoul(vs);
+                switch(age)
+                {
+                    case 12:
+                        vk=v1215;
+                        break;
+                    case 16:
+                         vk=v1617;
+                         break;
+                    case 18:
+                         vk=v1824;
+                         break;
+                    case 25:
+                         vk=v2529;
+                         break;
+                    case 30:
+                         vk=v3034;
+                         break;
+                    case 35:
+                         vk=v3539;
+                         break;
+                    case 40:
+                         vk=v4044;
+                         break;
+                    case 45:
+                         vk=v4549;
+                         break;
+                    case 50:
+                         vk=v5055;
+                         break;
+                    case 55:
+                         vk=v5559;
+                         break;
+                    case 60:
+                         vk=v6054;
+                         break;
+                    case 65:
+                         vk=v6559;
+                         break;
+                    case 70:
+                         vk=v7074;
+                         break;
+                    case 75:
+                         vk=v7579;
+                         break;
+                    case 80:
+                         vk=v80plus;
+                         break;
+                    default:
+                    {
+                        clog << "bad age " << age << endl;
+                        inconsistento++;
+                        noagerecords++;
+                        continue;
+                    }
+                }
+            }
+            catch (...)
+            {
+                clog << "Cannot convert '" << vs << "' to unsigned" << endl;
+                noagerecords++;
+                inconsistento++;
+                continue;
+            }
+         }
+
+         string gstr = data(i,pohlavi);
+         egender g;
+         if(gstr=="M")
+             g = emale;
+         else if(gstr=="Z")
+             g = efemale;
+         else
+         {
+             clog << "Unknown gender '" << gstr << "'" << endl;
+             inconsistento++;
+             continue;
+         }
+
+
+         string vaccdatestr = data(i,ukoncene_ockovani);
+         if(vaccdatestr == "")
+         {
+             clog << "missing ukoncene_ockovani" << endl;
+             inconsistento++;
+             continue;
+         }
+
+         int vaccdate = date2int(vaccdatestr, firstvaccdate,lastdate, vcounter);
+         if(vaccdate == maxint)
+         {
+             clog << "Invalid or out of range vacc date " << vaccdatestr << endl;
+             inconsistento++;
+             continue;
+         }
+
+         string infstring = data(i,datum_priznaku);
+         if(infstring == "")
+         {
+               infstring = data(i,datum_positivity);
+               if(infstring == "")
+                   infstring = data(i,datum_odberu);
+         }
+         if(infstring == "")
+         {
+             clog << "Unknown infection date " << endl;
+             inconsistento++;
+             continue;
+         }
+
+         int infdate = date2int(infstring, zerodate,lastdate, icounter);
+         if(infdate == maxint)
+         {
+             clog << "Invalid or out of range infection date " << vaccdatestr << endl;
+             inconsistento++;
+             continue;
+         }
+
+         if(infdate < vaccdate)
+         {
+             clog << "infection date less than vacc date " << endl;
+             inconsistento++;
+             continue;
+         }
+
+
+         int extradate = maxint;
+         string extradatestr = data(i,extra_davka);
+         if(extradatestr != "")
+         {
+             extradate = date2int(extradatestr,vaccdate,lastdate,ecounter);
+
+             if(extradate == maxint)
+             {
+                 clog << "Invalid or out of range extra date " << extradatestr << endl;
+                 inconsistento++;
+                 continue;
+             }
+
+         }
+
+         int t = vaccdate - firstvaccdate;
+         assert(i >= 0 || i<Y.size());
+         survivalrecord& sr = Y[t][v][g][vk];
+         assert(sr.events.size() > infdate - vaccdate);
+         assert(infdate-vaccdate >= 0);
+         sr.events[infdate-vaccdate]++;
+
+         if(extradate != maxint)
+         {
+            assert(sr.delta.size() > extradate - vaccdate);
+            assert(extradate-vaccdate >= 0);
+            sr.delta[extradate-vaccdate]--;
+         }
+    }
+    cout << inconsistento << " inconsistent records: "
+         << "Vaccination dates: " << endl
+         << vcounter.wrong << " wrong dates,"
+         << vcounter.over << " dates over,"
+         << vcounter.under << " dates under" << endl
+         << "Infection dates : " << endl
+         << icounter.wrong << " wrong dates,"
+         << icounter.over << " dates over,"
+         << icounter.under << " dates under" << endl
+         << "Extra dates : " << endl
+         << ecounter.wrong << " wrong dates,"
+         << ecounter.over << " dates over,"
+         << ecounter.under << " dates under" << endl;
+    cout << endl << noagerecords << " records without age" << endl;
+
+    counter pcounter;
+    unsigned inconsistentp = 0;
+
+
+    csv<','> profese("/home/martin/Documents/s/covid/data/mzcr/ockovani-profese.csv");
+
+    cout << "Importing profese" << endl;
+
+    unsigned pnoagerecords = 0;
+
+    for(unsigned i=1; i<profese.r(); i++)
+    {
+        enum {datum,vakcina,kraj_nuts_kod,kraj_nazev,zarizeni_kod,zarizeni_nazev,poradi_davky,indikace_zdravotnik,indikace_socialni_sluzby,indikace_ostatni,indikace_pedagog,indikace_skolstvi_ostatni,indikace_bezpecnostni_infrastruktura,indikace_chronicke_onemocneni,vekova_skupina,orp_bydliste,orp_bydliste_kod,prioritni_skupina_kod,pohlavi,zrizovatel_kod,zrizovatel_nazev,vakcina_kod,ukoncujici_davka};
+
+        string vcstr=profese(i,vakcina_kod);
+        if(profese(i,poradi_davky)=="2" || vcstr=="CO04")
+        {
+            evk vk;
+            string cs = profese(i,vekova_skupina);
+            string ls;
+            unsigned age;
+            for(unsigned j=0; j<cs.size() && cs[j] != '-' && cs[j] != '+'; j++)
+                ls += cs[j];
+            try
+            {
+                age = stoul(ls);
+                switch(age)
+                {
+                case 12:
+                    vk=v1215;
+                    break;
+                case 16:
+                     vk=v1617;
+                     break;
+                case 18:
+                     vk=v1824;
+                     break;
+                case 25:
+                     vk=v2529;
+                     break;
+                case 30:
+                     vk=v3034;
+                     break;
+                case 35:
+                     vk=v3539;
+                     break;
+                case 40:
+                     vk=v4044;
+                     break;
+                case 45:
+                     vk=v4549;
+                     break;
+                case 50:
+                     vk=v5055;
+                     break;
+                case 55:
+                     vk=v5559;
+                     break;
+                case 60:
+                     vk=v6054;
+                     break;
+                case 65:
+                     vk=v6559;
+                     break;
+                case 70:
+                     vk=v7074;
+                     break;
+                case 75:
+                     vk=v7579;
+                     break;
+                case 80:
+                     vk=v80plus;
+                     break;
+                default:
+                    clog << "bad age " << age << endl;
+                    inconsistentp++;
+                    pnoagerecords++;
+                }
+
+            }
+            catch (...)
+            {
+                clog << "Cannot convert'" << ls << "' to unsigned" << endl;
+                inconsistentp++;
+                continue;
+            }
+
+
+            evaccine v;
+            if(vcstr == "CO01")
+                v = Comirnaty;
+            else if(vcstr == "CO02")
+                v = SPIKEVAX;
+            else if(vcstr == "CO03")
+                v = VAXZEVRIA;
+            else if(vcstr == "CO04")
+                v =  Janssen;
+            else
+            {
+                clog << "Unknown vaccine code " << vcstr << endl;
+                inconsistentp++;
+                continue;
+            }
+
+            string gstr = profese(i,pohlavi);
+            egender g;
+            if(gstr=="M")
+                g = emale;
+            else if(gstr=="Z")
+                g = efemale;
+            else
+            {
+                clog << "Unknown gender '" << gstr << "'" << endl;
+                inconsistento++;
+                continue;
+            }
+
+            string ds = profese(i,datum);
+            int d = date2int(ds, zerodate,lastdate, pcounter);
+
+            if(d == maxint)
+            {
+                clog << "Invalid or out of range date " << ds << endl;
+                inconsistentp++;
+                continue;
+            }
+            else
+            {
+                int t = d - firstvaccdate;
+                assert(t>=0 && t < Y.size());
+                Y[t][v][g][vk].delta[0]++;
+            }
+        }
+    }
+
+    cout << inconsistentp << " inconsistent records: "
+         << pcounter.wrong << " wrong dates,"
+         << pcounter.over << " dates over,"
+         << pcounter.under << " dates under" << endl;
+
+    ofstream o(sys::outputfolder()+"survivalcohorts.csv");
+    if(!o)
+    {
+        cerr << "Cannot open " + sys::outputfolder()+"distrocts.csv" << endl;
+        throw;
+    }
+
+
+
+}
+
+
 int main()
 {
     double startt = time(0);
@@ -829,11 +1253,11 @@ int main()
     {
 //        sys::setoutputfolder("../output/");
 //        sys::settmpfolder("../tmp/");
-//      mzcr2mzcr("2021-10-31", "2021-06-04");
-//      uzis2uzis("2021-10-31");
+      mzcr2mzcr("2021-11-14", "2021-06-04");
+      uzis2uzis("2021-11-14");
 //
 //        mzcr2districts("2021-07-04");
-        mzcrocko2districts("2021-10-31");
+//        mzcrocko2districts("2021-10-31");
     }
     catch (std::exception& e) {
         std::cerr << e.what() << endl;

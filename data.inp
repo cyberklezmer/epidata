@@ -1,0 +1,47 @@
+#change accordingly
+open /home/martin/Documents/s/covid/epidata/data.ods --sheet=18
+logs X
+logs c
+logs G
+logs V
+logs I
+diff l_X
+
+genr d_l_XminV = d_l_X - l_V 
+
+
+smpl --full
+
+XA <- ols d_l_XminV const  l_c(-3) recratio(-1) cos dummify(variant)
+
+#smpl variant > 0 --restrict
+
+#XAalpha <- ols d_l_XminV const l_c(-3) recratio(-1) cos dummify(variant)
+
+#change date accrdigly
+fcast 2021-11-15 2021-11-15 fc --static
+genr ses=$fcse
+
+genr xfc=exp(fc+l_V + l_X(-1))
+genr upCI = exp(fc+l_V + l_X(-1) + ses*1.96)
+genr downCI = exp(fc+l_V + l_X(-1) - ses*1.96)
+
+
+diff G
+
+
+smpl delta==1 --restrict
+
+DAR <- wls weight D X(-1)
+
+fcast --plot=DF.PDF
+#outputs to gretl working diredtory
+#cbange number accordingly
+fcast 18 18 
+
+GAR <- wls weight d_G X(-1)
+#cbange number accordingly (increase of hospitalization)
+
+fcast --plot=HF.PDF
+
+fcast 18 18 
