@@ -19,7 +19,7 @@ XA <- ols d_l_XminV const  l_c(-3) recratio(-1) cos dummify(variant)
 #XAalpha <- ols d_l_XminV const l_c(-3) recratio(-1) cos dummify(variant)
 
 #change date accrdigly
-fcast 2021-11-15 2021-11-15 fc --static
+fcast 2021-11-21 2021-11-21 fc --static
 genr ses=$fcse
 
 genr xfc=exp(fc+l_V + l_X(-1))
@@ -37,11 +37,11 @@ DAR <- wls weight D X(-1)
 fcast --plot=DF.PDF
 #outputs to gretl working diredtory
 #cbange number accordingly
-fcast 18 18 
+fcast 19 19
 
-GAR <- wls weight d_G X(-1)
+GAR <- wls weight G X(-1)
 #cbange number accordingly (increase of hospitalization)
 
 fcast --plot=HF.PDF
 
-fcast 18 18 
+fcast 19 19
