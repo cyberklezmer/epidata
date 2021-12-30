@@ -102,7 +102,7 @@ void mzcr2mzcr(const string& horizon,  const string& start16)
 
     for(unsigned i=1; i<umrti.r(); i++)
     {
-        enum labels {datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod};
+        enum labels {id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod};
 
         string ds = umrti(i,datum);
         int d = date2int(ds, zerodate,lastdate, ucounter);
@@ -126,7 +126,7 @@ void mzcr2mzcr(const string& horizon,  const string& start16)
 
     counter occounter;
     unsigned inconsistentoc = 0;
-    vector<vector<unsigned>> O(numdates,vector<unsigned>(numcohorts * 2,0));
+    vector<vector<unsigned>> O(numdates,vector<unsigned>(numcohorts * 3,0));
 
     csv<','> ockovani("/home/martin/Documents/s/covid/data/mzcr/ockovani.csv");
 
@@ -134,7 +134,7 @@ void mzcr2mzcr(const string& horizon,  const string& start16)
 
     for(unsigned i=1; i<ockovani.r(); i++)
     {
-        enum labels {datum,vakcina,kraj_nuts_kod,kraj_nazev,vekova_skupina,
+        enum labels {id,datum,vakcina,kraj_nuts_kod,kraj_nazev,vekova_skupina,
                      prvnich_davek,druhych_davek,celkem_davek};
 
         string ds = ockovani(i,datum);
@@ -187,12 +187,24 @@ void mzcr2mzcr(const string& horizon,  const string& start16)
                 assert(age == 0);
                 c = c0;
             }
-            unsigned first = ockovani.getunsigned(i,prvnich_davek);
-            unsigned secondadj = ockovani.getunsigned(i,druhych_davek);
+            unsigned first;
+            unsigned second;
             if(ockovani(i,vakcina)=="COVID-19 Vaccine Janssen")
-                secondadj += first;
+            {
+                first = 0;
+                second = ockovani.getunsigned(i,prvnich_davek);
+            }
+            else
+            {
+                first = ockovani.getunsigned(i,prvnich_davek);
+                second = ockovani.getunsigned(i,druhych_davek);
+            }
+            unsigned boosters = ockovani.getunsigned(i,celkem_davek)
+                    - ockovani.getunsigned(i,prvnich_davek)
+                    - ockovani.getunsigned(i,druhych_davek);
             O[d-zerodate][c] += first;
-            O[d-zerodate][c+numcohorts] += secondadj;
+            O[d-zerodate][c+numcohorts] += second;
+            O[d-zerodate][c+2*numcohorts] += boosters;
         }
     }
     cout << inconsistentoc << " inconsistent records: "
@@ -206,7 +218,7 @@ void mzcr2mzcr(const string& horizon,  const string& start16)
     if(!out)
             throw("Cannot create "+mname);
 
-    out << "date, I0,I20,I65,I80,X0,X20,X65,X80,D0,D20,D65,D80,First0,First20,First65,First80,Second0,Second20,Second65,Second80" << endl;
+    out << "date, I0,I20,I65,I80,X0,X20,X65,X80,D0,D20,D65,D80,First0,First20,First65,First80,Final0,Final20,Final65,Final80,Booster0,Booster20,Booster65,Booster80" << endl;
 
     for(unsigned i=0; i<numdates; i++)
     {
@@ -220,7 +232,9 @@ void mzcr2mzcr(const string& horizon,  const string& start16)
         out << O[i][0] << "," << O[i][1] << ","
              << O[i][2] << "," << O[i][3] << ",";
         out << O[i][4] << "," << O[i][5] << ","
-             << O[i][6] << "," << O[i][7] << endl;
+             << O[i][6] << "," << O[i][7] << ",";
+        out << O[i][8] << "," << O[i][9] << ","
+             << O[i][10] << "," << O[i][11] << endl;
     }
 }
 
@@ -1126,8 +1140,8 @@ int main()
     {
 //        sys::setoutputfolder("../output/");
 //        sys::settmpfolder("../tmp/");
-//      mzcr2mzcr("2021-11-21", "2021-06-04");
-      uzis2uzis("2021-11-21");
+      mzcr2mzcr("2021-12-19", "2021-06-04");
+//      uzis2uzis("2021-11-28");
 //
 //        mzcr2districts("2021-07-04");
 //        mzcrocko2districts("2021-10-31");
