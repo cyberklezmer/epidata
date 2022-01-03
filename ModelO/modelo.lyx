@@ -1,0 +1,625 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Model O
+\end_layout
+
+\begin_layout Section*
+Model of Delta
+\end_layout
+
+\begin_layout Standard
+Weekly cases 
+\begin_inset Formula $X_{t},$
+\end_inset
+
+ simple model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X_{t}=r_{t}I_{t-1}c_{t-2}s_{t-1}X_{t-1}+\epsilon_{t}\label{eq:main}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $r_{t}$
+\end_inset
+
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+basic reproduction number
+\begin_inset Quotes erd
+\end_inset
+
+ (see later), 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ is the contact reduction (
+\begin_inset Formula $1$
+\end_inset
+
+ corresponds to pre-pandemics), 
+\begin_inset Formula $s_{t}=1+\gamma\cos(at+b)$
+\end_inset
+
+ where 
+\begin_inset Formula $\gamma(=0.18)$
+\end_inset
+
+ is a constant and 
+\begin_inset Formula $a,b,$
+\end_inset
+
+ are such that the period is one year and the max is in the half of January,
+ 
+\begin_inset Formula $\epsilon_{t},\text{\ensuremath{\mathbb{E}\epsilon_{t}=0} }$
+\end_inset
+
+is a residuum with standard deviation 
+\begin_inset Formula $\sim X_{t-1}$
+\end_inset
+
+ and 
+\begin_inset Formula 
+\begin{equation}
+I_{t}=(1-\frac{u_{t}}{\alpha})V_{t},\qquad V_{t}=(1-v_{t}-w_{t})\label{eq:i}
+\end{equation}
+
+\end_inset
+
+is the immunity coefficient where 
+\begin_inset Formula $\alpha(=0.4)$
+\end_inset
+
+ is the ascertainment, 
+\begin_inset Formula 
+\[
+u_{t}=(\rho\circ x)_{t},\qquad w_{t}=(\psi\circ b)_{t}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\rho$
+\end_inset
+
+ is the waning of natural immunity (
+\begin_inset Formula $=2\%$
+\end_inset
+
+ a month), 
+\begin_inset Formula $\psi$
+\end_inset
+
+ is the booster waning (probably same as second dose waning), 
+\begin_inset Formula $x_{t}=\frac{\sum_{s}^{t}X_{s}}{population},$
+\end_inset
+
+ 
+\begin_inset Formula $b_{t}=\frac{B_{t}}{population}$
+\end_inset
+
+, 
+\begin_inset Formula $B_{t}$
+\end_inset
+
+ is the number of boosters and 
+\begin_inset Formula $\circ$
+\end_inset
+
+ is convolution.
+ With full (1 or 2 shot) vaccination it is a bit more complex.
+ 
+\begin_inset Formula 
+\[
+v_{t}=(\phi\circ f^{t})_{t}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\phi$
+\end_inset
+
+ is the immunity waning of final doses (=5% a month), 
+\begin_inset Formula $f_{\tau}^{t}=\frac{F_{\tau}^{t}}{population}$
+\end_inset
+
+, 
+\begin_inset Formula $F_{\tau}^{t}$
+\end_inset
+
+ is the number of people who got final doses at 
+\begin_inset Formula $\tau$
+\end_inset
+
+ but did not get boosters by 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Practically
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $r_{t}$
+\end_inset
+
+ can be estimated by regression (since July 21 should be constant 
+\begin_inset Formula $r_{t}=r^{\delta}$
+\end_inset
+
+), 
+\begin_inset Formula 
+\[
+\frac{X_{t}}{X_{t-1}}=r^{\delta}\underbrace{I_{t-1}c_{t-2}s_{t-1}}_{\text{independet var}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $X$
+\end_inset
+
+ (hence 
+\begin_inset Formula $x$
+\end_inset
+
+) can be got from public datasets
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+ probably best from ockovani.csv (boosters can be got as difference total-first-s
+econd)
+\end_layout
+
+\begin_layout Standard
+Note: when computing the model, it may happen due to a rough time interval
+ that 
+\begin_inset Formula $I_{t}<0$
+\end_inset
+
+.
+ Thus, we have to adjust its computation as 
+\begin_inset Formula 
+\[
+I_{t}=[1-\frac{u_{t}}{\alpha}]^{+}V_{t}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Omicron
+\end_layout
+
+\begin_layout Standard
+Denote 
+\begin_inset Formula $Y_{t}^{v}$
+\end_inset
+
+ the numbers of omicron infections given that previous infection by infection
+ delta did not take place and 
+\begin_inset Formula $Y_{t}^{\delta}$
+\end_inset
+
+ the number of those who had delta before.
+ Assume that 
+\begin_inset Formula $Y_{\tau}^{v}=i$
+\end_inset
+
+ for some (import) 
+\begin_inset Formula $i$
+\end_inset
+
+ and starting time 
+\begin_inset Formula $\tau$
+\end_inset
+
+ and 
+\begin_inset Formula $Y_{\tau}^{\delta}=0,Y_{t}^{v}=0,Y_{t}^{\delta}=0,\tau<t.$
+\end_inset
+
+ Put 
+\begin_inset Formula $Y_{t}=Y_{t}^{\delta}+Y_{t}^{v}.$
+\end_inset
+
+ Let (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:main"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) keep holding with 
+\begin_inset Formula $r_{t}=r^{\delta}$
+\end_inset
+
+ and
+\begin_inset Formula 
+\[
+u_{t}=u_{t}^{\delta},\qquad u_{t}^{\delta}=(\rho\circ y^{v})_{t}+(\rho\circ(x-y^{\delta}))_{t}+(\rho\circ y^{\delta})_{t}=(\rho\circ(x+y^{v}))_{t}
+\]
+
+\end_inset
+
+where
+\begin_inset Formula $y_{t}^{v}=\frac{\sum_{s}^{t}Y_{s}^{v}}{population}$
+\end_inset
+
+, 
+\begin_inset Formula $y_{t}^{\delta}=\frac{\sum_{s}^{t}Y_{s}^{\delta}}{population}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+As for Omicron, we assume, for 
+\begin_inset Formula $t>\tau$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+Y_{t}=r^{o}J_{t-1}c_{t-2}s_{t-1}Y_{t-1}+\varepsilon_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\begin_inset Formula 
+\[
+J_{t}=\left[1-\frac{e\times(\rho\circ(x-y^{d}))_{t}+y_{t}^{d}+(\rho\circ y^{v})_{t}}{\alpha}\right]^{+},\qquad W_{t}=1-(\iota v_{t}+\upsilon w_{t}),\qquad
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\iota,\upsilon\in[0,1]$
+\end_inset
+
+ is the omicron's immunity escape from finished vaccination, booster, respective
+ly, immunity (one means no escape).
+ Note that we assume 100 per cent immunity after double infection.
+ However, this does not disinguish reinfections (after delta) and new infections.
+ To get this, observe that the population fraction not having reported infection
+ is 
+\begin_inset Formula $u^{ov}=x_{t}+y_{t}^{v}$
+\end_inset
+
+ so the virgin population is 
+\begin_inset Formula $1-\frac{u_{t}^{ov}}{\alpha},$
+\end_inset
+
+ hence
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y_{t}^{v}=r^{o}J_{t-1}^{v}c_{t-2}s_{t-1}Y_{t-1}+\varepsilon_{t},\qquad J_{t}^{v}=\left[1-\frac{u_{t}^{ov}}{\alpha}\right]^{+}W_{t};
+\]
+
+\end_inset
+
+Consequently, 
+\begin_inset Formula 
+\[
+Y_{t}^{d}=r^{o}J_{t-1}^{d}c_{t-2}s_{t-1}Y_{t-1}+\varepsilon_{t},\qquad J_{t}^{d}=J_{t}-J_{t}^{v}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Estimation of 
+\begin_inset Formula $\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From regression
+\begin_inset Formula 
+\begin{multline*}
+\frac{X_{t}}{X_{t-1}}=r^{\delta}(1-\frac{u_{t}}{\alpha})(1-v_{t}-w_{t})c_{t-2}s_{t-1}\\
+=r^{\delta}\underbrace{(1-v_{t}-w_{t})c_{t-2}s_{t-1}}_{1st\text{independet var}}+\underbrace{\beta}_{=-\frac{r^{\delta}}{\alpha}}\underbrace{u_{t}(1-v_{t}-w_{t})c_{t-2}s_{t-1}}_{\text{2nd independent var}}
+\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Hospitalization
+\end_layout
+
+\begin_layout Standard
+Data show that number 
+\begin_inset Formula $H_{t}$
+\end_inset
+
+ of newly admitted to hospital best correlate with 
+\begin_inset Formula $X_{t}$
+\end_inset
+
+, These are data from autumn 2021 (boxes):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename ../../ModelO/h.eps
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The graph shows a nearly perfect linear dependece up to approx 550 admissions,
+ then there is a kink.
+ We fit this as 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H_{t}=f(\gamma^{\delta}X_{t})\qquad f(x)=x-\delta(x-\eta)^{+},\qquad\gamma^{\delta}=0.00628,\delta=0.4802,\eta=565
+\]
+
+\end_inset
+
+(diamonds show the fit).
+ 
+\end_layout
+
+\begin_layout Standard
+With 
+\begin_inset Formula $o$
+\end_inset
+
+ variant present, we will assume 
+\begin_inset Formula 
+\[
+H_{t}=f(\gamma^{\delta}X_{t}+\gamma^{o}Y_{t})
+\]
+
+\end_inset
+
+ for some 
+\begin_inset Formula $\gamma^{o}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section*
+Simulation of Omicron onset
+\end_layout
+
+\begin_layout Standard
+As a base, we take waning parameters from [Andrews et al., Effectiveness
+ of COVID-19 vaccines against the Omicron (B.1.1.529) variant of concern, https://w
+ww.medrxiv.org/content/10.1101/2021.12.14.21267615v1.]: 
+\begin_inset Formula $\iota=0.5,\upsilon=0.8.$
+\end_inset
+
+ We assume that the reduction 
+\begin_inset Formula $e$
+\end_inset
+
+ of post-infection immunity is similar to that of boosters.
+ Further we, in line with Report 50 of Ferguson et al.
+ (https://www.imperial.ac.uk/media/imperial-college/medicine/mrc-gida/2021-12-22-CO
+VID19-Report-50.pdf?fbclid=IwAR2OB0rvk9l7N4dFR6YlN84Od-4_hAWzXKPC-UrWe1pPpzSp2E6e
+qcgICeA) assume that the hospitalization rate of omicron is approx two times
+ less than that of delta.
+ According to accumulating evidence, we estimate 
+\begin_inset Formula $r^{o}$
+\end_inset
+
+ to be around 2.5 times more than 
+\begin_inset Formula $r^{\delta.}.$
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The growth rate 
+\begin_inset Formula $r^{o}$
+\end_inset
+
+ can aůsp be computed from the reported doubling time 
+\begin_inset Formula $d$
+\end_inset
+
+ by formula 
+\begin_inset Formula 
+\begin{equation}
+r^{o}=\exp\{7\ln(2)/d\}/J,\qquad J=(1-eu)(1-(\iota v+\upsilon w))=(1-e\times0.5)(1-(\iota\times0.3+\upsilon\times0.3))\label{eq:rom}
+\end{equation}
+
+\end_inset
+
+Here, 
+\begin_inset Formula $J$
+\end_inset
+
+ is the omicron's immunity factor in UK at time of omicron onset.
+ (after imposing into the omicron's regression equation, it produces the
+ weekly grow corresponding to the doubling time 
+\begin_inset Formula $d$
+\end_inset
+
+).
+ 
+\end_layout
+
+\end_inset
+
+Further, by the latest estimate by UZIS, omicron now forms about one tenth
+ of cases, which means that 
+\begin_inset Formula $i\doteq5000$
+\end_inset
+
+ by December 27.
+\end_layout
+
+\begin_layout Standard
+We compute 
+\begin_inset Formula $3^{5}$
+\end_inset
+
+ scenarios by perturbing following parameters
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\iota\in\{0.4,0.5,0.6\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\upsilon\in\{0.7,0.8,0.9\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $e\in\{0.7,0.8,0.9\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $r^{o}\in\{2r^{\delta},2.5r^{\delta},3r^{\delta}\}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\gamma^{o}\in\{0.4\gamma^{\delta},0.5\gamma^{\delta},0.6\gamma^{\delta}\}$
+\end_inset
+
+ 
+\end_layout
+
+\end_body
+\end_document
