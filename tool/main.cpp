@@ -1140,7 +1140,7 @@ int main()
     {
 //        sys::setoutputfolder("../output/");
 //        sys::settmpfolder("../tmp/");
-      mzcr2mzcr("2021-12-19", "2021-06-04");
+      mzcr2mzcr("2022-01-09", "2021-06-04");
 //      uzis2uzis("2021-11-28");
 //
 //        mzcr2districts("2021-07-04");
