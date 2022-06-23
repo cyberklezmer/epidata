@@ -46,7 +46,7 @@ void mzcr2mzcr(const string& horizon,  const string& start16)
     vector<vector<unsigned>> I(numdates,vector<unsigned>(numcohorts,0));
     vector<vector<unsigned>> R(numdates,vector<unsigned>(numcohorts,0));
 
-    csv<','> osoby("/home/martin/Documents/s/covid/data/mzcr/osoby.csv");
+    csv<','> osoby("/home/martin/data/mzcr/osoby.csv");
 
     cout << "Importing osoby" << endl;
 
@@ -96,7 +96,7 @@ void mzcr2mzcr(const string& horizon,  const string& start16)
     unsigned inconsistentu = 0;
     vector<vector<unsigned>> D(numdates,vector<unsigned>(numcohorts,0));
 
-    csv<','> umrti("/home/martin/Documents/s/covid/data/mzcr/umrti.csv");
+    csv<','> umrti("/home/martin/data/mzcr/umrti.csv");
 
     cout << "Importing umrti" << endl;
 
@@ -128,7 +128,7 @@ void mzcr2mzcr(const string& horizon,  const string& start16)
     unsigned inconsistentoc = 0;
     vector<vector<unsigned>> O(numdates,vector<unsigned>(numcohorts * 3,0));
 
-    csv<','> ockovani("/home/martin/Documents/s/covid/data/mzcr/ockovani.csv");
+    csv<','> ockovani("/home/martin/data/mzcr/ockovani.csv");
 
     cout << "Importing ockovani" << endl;
 
@@ -278,7 +278,7 @@ void uzis2uzis(const string& horizon)
 
 //    enum efromis { efideath, efihosp, efidet};
 
-    csv<';'> src("/home/martin/Documents/s/covid/data/epidemie/modely_05_hospitalizovani_analyza.csv");
+    csv<';'> src("/home/martin/data/epidemie/modely_05_hospitalizovani_analyza.csv");
 
     assert(src.c(0)==numlabels);
 
@@ -399,7 +399,7 @@ void mzcr2districts(const string& horizon)
     vector<unsigned> Y(numweeks,0);
     vector<unsigned> YM(numweeks,0);
 
-    csv<','> osoby("/home/martin/Documents/s/covid/data/mzcr/osoby.csv");
+    csv<','> osoby("/home/martin/data/mzcr/osoby.csv");
 
     cout << "Importing osoby" << endl;
 
@@ -515,7 +515,7 @@ void mzcrocko2districts(const string& horizon)
     vector<vector<unsigned>> C(numdistricts,vector<unsigned>(numweeks,0));
     vector<unsigned> Y(numweeks,0);
 
-    csv<','> osoby("/home/martin/Documents/s/covid/data/mzcr/osoby.csv");
+    csv<','> osoby("/home/martin/data/mzcr/osoby.csv");
 
     cout << "Importing osoby" << endl;
 
@@ -572,7 +572,7 @@ void mzcrocko2districts(const string& horizon)
     unsigned inconsistentu = 0;
     vector<vector<unsigned>> D(numdistricts,vector<unsigned>(numweeks,0));
 
-    csv<','> umrti("/home/martin/Documents/s/covid/data/mzcr/umrti.csv");
+    csv<','> umrti("/home/martin/data/mzcr/umrti.csv");
 
     cout << "Importing umrti" << endl;
 
@@ -629,7 +629,7 @@ void mzcrocko2districts(const string& horizon)
     vector<vector<unsigned>> O(numdistricts,vector<unsigned>(numweeks,0));
     vector<unsigned> V(numweeks,0);
 
-    csv<','> profese("/home/martin/Documents/s/covid/data/mzcr/ockovani-profese.csv");
+    csv<','> profese("/home/martin/data/mzcr/ockovani-profese.csv");
 
     cout << "Importing profese" << endl;
 
@@ -773,7 +773,7 @@ void ockodata2R() // rozdelane
 
     o << "Subject,T1,T2,Inf,InfPrior,AgeGr, Sex" << endl;
 
-    csv<','> data("/home/martin/Documents/s/covid/data/epidemie/part/part.csv");//data.csv");
+    csv<','> data("/home/martin/data/epidemie/part/part.csv");//data.csv");
 
     cout << "Importing ockodata" << endl;
 
@@ -1140,8 +1140,8 @@ int main()
     {
 //        sys::setoutputfolder("../output/");
 //        sys::settmpfolder("../tmp/");
-      mzcr2mzcr("2022-01-09", "2021-06-04");
-//      uzis2uzis("2021-11-28");
+//      mzcr2mzcr("2022-04-24", "2021-06-04");
+         uzis2uzis("2021-94-24");
 //
 //        mzcr2districts("2021-07-04");
 //        mzcrocko2districts("2021-10-31");
